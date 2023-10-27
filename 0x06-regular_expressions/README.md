@@ -6,4 +6,8 @@
 5-beginning_and_end.rb - 
 6-phone_number.rb - 
 7-OMG_WHY_ARE_YOU_SHOUTING.rb - 
+<<<<<<< HEAD
 100-textme.rb - match sender, reciever, and flags in text message logs
+=======
+100-textme.rb - match sender, reciever, and flags in text message logs
+>>>>>>> 10bd7f38afdee7038fc546b9b09bd713a60de33d
