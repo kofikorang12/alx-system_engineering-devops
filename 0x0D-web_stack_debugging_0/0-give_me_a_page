@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-# FIXE AN APACHE SERVER IN A CONRAINER
+# run apache on designated container
 
+echo "ServerName localhost" >> /etc/apache2.conf
 service apache2 start
