@@ -33,18 +33,18 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend  kofikorang12-frontend-http
-        bind *:80
-        mode http
+frontend http.mubareksd.tech
+	bind *:80
+	mode http
 	http-request set-header X-Forwarded-Proto http
-        default_backend kofikorang12-backend
+	default_backend webservers
 
-frontend kofikorang12-frontend-https
-	bind *:443 ssl crt /etc/haproxy/certs/www.kofikorang12.tech.pem
+frontend https.mubareksd.tech
+	bind *:443 ssl crt /etc/letsencrypt/live/mubareksd.tech/fullchain.pem
 	http-request set-header X-Forwarded-Proto https
-	default_backend ehoneah-backend
+	default_backend webservers
 
-backend kofikorang12-backend
-        balance roundrobin
-        server 320953-web-01 54.236.16.138:80 check
-        server 320953-web-02 100.25.169.79:80 check
+backend webservers
+	balance roundrobin
+	server 298431-web-01 18.210.10.182:80 check
+	server 298431-web-02 100.26.20.159:80 check
