@@ -1,36 +1,45 @@
 #!/usr/bin/python3
-'''
-returns full list of hot posts in a subreddit
-'''
-
+"""
+Function that queries the Reddit API and prints
+the top 10 hot posts of a subreddit
+"""
 import requests
+import sys
 
 
-def recurse(subreddit, hot_list=[], after="", count=0):
-    """Returns the hotest title recursivly"""
-    base_url = 'https://www.reddit.com'
-    query = 'r/{}/hot.json'.format(subreddit)
+def add_title(hot_list, hot_posts):
+    """ Adds item into a list """
+    if len(hot_posts) == 0:
+        return
+    hot_list.append(hot_posts[0]['data']['title'])
+    hot_posts.pop(0)
+    add_title(hot_list, hot_posts)
+
+
+def recurse(subreddit, hot_list=[], after=None):
+    """ Queries to Reddit API """
+    u_agent = 'Mozilla/5.0'
     headers = {
-        "User-Agent": "linux:hbtn.advanced.api (by /u/koeusiss)"
+        'User-Agent': u_agent
     }
+
     params = {
-        "after": after,
-        "count": count
+        'after': after
     }
-    req = requests.get(
-        url='{}/{}'.format(base_url, query),
-        headers=headers,
-        params=params,
-        allow_redirects=False
-    )
-    if req.status_code == 404:
+
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    res = requests.get(url,
+                       headers=headers,
+                       params=params,
+                       allow_redirects=False)
+
+    if res.status_code != 200:
         return None
-    res = req.json().get('data')
-    after = res.get('after')
-    count += res.get('dist')
-    children = res.get('children')
-    for child in children:
-        hot_list.append(child.get('data').get('title'))
-    if after:
-        return recurse(subreddit, hot_list, after, count)
-    return hot_list
+
+    dic = res.json()
+    hot_posts = dic['data']['children']
+    add_title(hot_list, hot_posts)
+    after = dic['data']['after']
+    if not after:
+        return hot_list
+    return recurse(subreddit, hot_list=hot_list, after=after)
