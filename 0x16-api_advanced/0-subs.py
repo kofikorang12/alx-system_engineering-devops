@@ -7,16 +7,21 @@ import requests
 
 
 def number_of_subscribers(subreddit):
-    '''
-    returns number of subscribers for a given subreddit
-    '''
-    headers = {'user-agent': 'my-app/0.0.1'}
-
-    r = requests.get('https://www.reddit.com/r/{}/about/.json'
-                     .format(subreddit),
-                     headers=headers)
-
-    try:
-        return r.json()['data']['subscribers']
-    except KeyError:
+    """Returns the number of suscriber for a given subreddit"""
+    base_url = 'https://www.reddit.com'
+    query = 'r/{}/about.json'.format(subreddit)
+    headers = {
+        "User-Agent": "linux:hbtn.advanced.api (by /u/kofikorang12)"
+    }
+    req = requests.get(
+        url='{}/{}'.format(base_url, query),
+        headers=headers,
+        allow_redirects=False
+    )
+    if req.status_code == 404:
         return 0
+    res = req.json()
+    return res.get('data').get('subscribers')
+
+if __name__ == '__main__':
+    number_of_subscribers(subreddit)
